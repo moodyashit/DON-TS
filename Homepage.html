@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baylo - Home</title>
+    <title>Homepage</title>
     <style>
         * {
             margin: 0;
@@ -107,12 +107,6 @@
             list-style: none;
             padding: 0;
             margin: 0;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .sidebar:hover .sidebar-menu {
-            opacity: 1;
         }
 
         .sidebar-menu-item {
@@ -129,6 +123,7 @@
             transition: all 0.3s ease;
             font-size: 14px;
             white-space: nowrap;
+            position: relative;
         }
 
         .sidebar-menu-link:hover {
@@ -138,6 +133,39 @@
 
         .sidebar-menu-link.active {
             background: rgba(245, 230, 211, 0.2);
+        }
+
+        .menu-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-right: 15px;
+        }
+
+        .menu-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: #F5E6D3;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .sidebar:not(:hover) .sidebar-menu-link span:not(.menu-icon) {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        .sidebar:not(:hover) .menu-icon {
+            margin-right: 0;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         /* Main Content Area */
@@ -194,6 +222,18 @@
             .sidebar.active .sidebar-header-text {
                 opacity: 1;
                 visibility: visible;
+            }
+
+            .sidebar .sidebar-menu-link span:not(.menu-icon) {
+                opacity: 1 !important;
+                width: auto !important;
+            }
+
+            .sidebar .menu-icon {
+                margin-right: 15px !important;
+                position: relative !important;
+                left: auto !important;
+                transform: none !important;
             }
 
             .main-content {
@@ -583,36 +623,101 @@
         <ul class="sidebar-menu">
             <li class="sidebar-menu-item">
                 <a href="inbox.html" class="sidebar-menu-link">
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                        </svg>
+                    </span>
                     <span>Inbox</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
                 <a href="#saved" class="sidebar-menu-link">
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/>
+                        </svg>
+                    </span>
                     <span>Saved Items</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
                 <a href="#recent" class="sidebar-menu-link">
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </span>
                     <span>Recently Viewed</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
                 <a href="#delivery" class="sidebar-menu-link">
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                    </span>
                     <span>Delivery Address</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
+                <a href="#cart" class="sidebar-menu-link">
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                    </span>
+                    <span>Cart</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#sell" class="sidebar-menu-link">
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 01-8 0"/>
+                        </svg>
+                    </span>
+                    <span>Sell</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
                 <a href="#contacts" class="sidebar-menu-link">
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 010 7.75"/>
+                        </svg>
+                    </span>
                     <span>Contacts</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
                 <a href="#settings" class="sidebar-menu-link">
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M12 1v6m0 6v6m5.66-13.66l-4.24 4.24m0 5.66l-4.24 4.24M23 12h-6m-6 0H1m18.66 5.66l-4.24-4.24m-5.66 0l-4.24-4.24"/>
+                        </svg>
+                    </span>
                     <span>Settings</span>
                 </a>
             </li>
             <li class="sidebar-menu-item" style="margin-top: 20px;">
                 <a href="#" class="sidebar-menu-link" onclick="logout(event)" style="background: rgba(255, 255, 255, 0.1);">
+                    <span class="menu-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                    </span>
                     <span>Logout</span>
                 </a>
             </li>
