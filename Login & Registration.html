@@ -326,6 +326,65 @@
             display: block;
         }
 
+        /* Validation Error Badge */
+        .error-badge {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            background: #ff6b6b;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+            z-index: 10000;
+            animation: slideInDown 0.3s ease;
+        }
+
+        .error-badge.show {
+            display: flex;
+        }
+
+        .error-icon {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff6b6b;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Input error state */
+        .form-group input.input-error {
+            border-color: #ff6b6b !important;
+            animation: shake 0.3s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .logo {
@@ -404,6 +463,13 @@
                 font-size: 32px;
                 margin-bottom: 30px;
             }
+
+            .error-badge {
+                top: 80px;
+                right: 15px;
+                font-size: 13px;
+                padding: 10px 18px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -478,6 +544,19 @@
                 width: 50px;
                 height: 50px;
             }
+
+            .error-badge {
+                top: 70px;
+                right: 10px;
+                font-size: 12px;
+                padding: 8px 15px;
+            }
+
+            .error-icon {
+                width: 18px;
+                height: 18px;
+                font-size: 11px;
+            }
         }
 
         /* Landscape mobile */
@@ -505,6 +584,12 @@
     </style>
 </head>
 <body>
+    <!-- Error Badge -->
+    <div class="error-badge" id="errorBadge">
+        <span id="errorMessage">Error found</span>
+        <span class="error-icon">!</span>
+    </div>
+
     <div class="container">
         <!-- Top Navigation Bar -->
         <div class="header">
@@ -529,10 +614,10 @@
             <!-- Login Page -->
             <div class="form-container page active" id="loginPage">
                 <h2 class="form-title">LOG IN</h2>
-                <form onsubmit="event.preventDefault();">
+                <form id="loginForm" onsubmit="return handleLogin(event);">
                     <div class="form-group">
                         <label>Email or Username</label>
-                        <input type="text" placeholder="">
+                        <input type="text" id="loginEmail" placeholder="">
                     </div>
                     <div class="form-group">
                         <label>Password</label>
@@ -555,7 +640,7 @@
                         </svg>
                         Sign In
                     </button>
-                   <button type="button" class="submit-btn" onclick="togglePage()" style="margin-top: 15px; color: #0162ff;">
+                   <button type="button" class="submit-btn" onclick="togglePage()" style="margin-top: 15px; background-color: #0162ff;">
                         Sign Up
                     </button>
                 </form>
@@ -564,10 +649,10 @@
             <!-- Sign Up Page -->
             <div class="form-container page" id="signupPage">
                 <h2 class="form-title">SIGN UP</h2>
-                <form onsubmit="event.preventDefault();">
+                <form id="signupForm" onsubmit="return handleSignup(event);">
                     <div class="form-group">
                         <label>Email or Username</label>
-                        <input type="text" placeholder="">
+                        <input type="text" id="signupEmail" placeholder="">
                     </div>
                     <div class="form-group">
                         <label>Create Password</label>
@@ -609,10 +694,142 @@
     </div>
 
     <script>
+        // Show error badge
+        function showError(message) {
+            const errorBadge = document.getElementById('errorBadge');
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message || 'Error found';
+            errorBadge.classList.add('show');
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                hideError();
+            }, 3000);
+        }
+
+        // Hide error badge
+        function hideError() {
+            const errorBadge = document.getElementById('errorBadge');
+            errorBadge.classList.remove('show');
+        }
+
+        // Clear all input errors
+        function clearInputErrors() {
+            document.querySelectorAll('.form-group input').forEach(input => {
+                input.classList.remove('input-error');
+            });
+        }
+
+        // Email validation
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Handle login form submission
+        function handleLogin(event) {
+    event.preventDefault();
+
+    hideError();
+    clearInputErrors();
+
+    const emailInput = document.getElementById('loginEmail');
+    const passwordInput = document.getElementById('loginPassword');
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    let hasError = false;
+    let errorMessage = '';
+
+    if (!email || !password) {
+        hasError = true;
+        errorMessage = 'Error found!';
+    } else if (password.length < 6) {
+        hasError = true;
+        errorMessage = 'Error found!';
+    }
+
+    if (hasError) {
+        showError(errorMessage);
+        markBothRed(emailInput, passwordInput);
+        return false;
+    }
+
+    // success
+    alert('Login successful!');
+    localStorage.setItem('userLoggedIn', 'true');
+    localStorage.setItem('userEmail', email);
+    window.location.href = 'homepage-fixed.html';
+
+    return false;
+}
+
+
+        // Handle signup form submission
+       function handleSignup(event) {
+    event.preventDefault();
+
+    hideError();
+    clearInputErrors();
+
+    const emailInput = document.getElementById('signupEmail');
+    const passwordInput = document.getElementById('signupPassword');
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    let hasError = false;
+    let errorMessage = '';
+
+    if (!email || !password) {
+        hasError = true;
+        errorMessage = 'Error Found!';
+    } 
+    else if (email.includes('@') && !isValidEmail(email)) {
+        hasError = true;
+        errorMessage = 'Please enter a valid email address';
+    } 
+    else if (password.length < 8) {
+        hasError = true;
+        errorMessage = 'Error Found!';
+    } 
+    else {
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+
+        if (!hasUpperCase || !hasLowerCase || !hasNumber) {
+            hasError = true;
+            errorMessage = 'Eror Found!';
+        }
+    }
+
+    if (hasError) {
+        showError(errorMessage);
+        markBothRed(emailInput, passwordInput);
+        return false;
+    }
+
+    // success
+    alert('Account created successfully!');
+    localStorage.setItem('userLoggedIn', 'true');
+    localStorage.setItem('userEmail', email);
+    window.location.href = 'homepage-fixed.html';
+
+    return false;
+}
+
+
+        // Toggle between login and signup pages
         function togglePage() {
             const loginPage = document.getElementById('loginPage');
             const signupPage = document.getElementById('signupPage');
             const registerBtn = document.querySelector('.register-btn');
+
+            // Clear errors when switching
+            hideError();
+            clearInputErrors();
 
             if (loginPage.classList.contains('active')) {
                 loginPage.classList.remove('active');
@@ -625,6 +842,7 @@
             }
         }
 
+        // Toggle password visibility
         function togglePassword(inputId) {
             const input = document.getElementById(inputId);
             if (input.type === 'password') {
@@ -633,6 +851,13 @@
                 input.type = 'password';
             }
         }
+
+        // Clear error state when user starts typing
+        document.querySelectorAll('.form-group input').forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('input-error');
+            });
+        });
     </script>
 </body>
 </html>
