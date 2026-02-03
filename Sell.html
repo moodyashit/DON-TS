@@ -127,13 +127,13 @@
             justify-content: center;
         }
 
-        /* ===== Sell Card (outer brown border frame) ===== */
+        /* ===== Sell Card (outer brown border frame) - WIDER ===== */
         .sell-card {
             background: #8B5A3C;
             border-radius: 20px;
             padding: 22px;
             width: 100%;
-            max-width: 680px;
+            max-width: 1000px;
             box-shadow: 0 8px 30px rgba(0,0,0,0.2);
         }
 
@@ -180,7 +180,7 @@
 
         /* ===== Form body ===== */
         .sell-body {
-            padding: 28px 28px 34px;
+            padding: 28px 40px 34px;
         }
 
         /* ===== Camera / Upload Box ===== */
@@ -222,7 +222,7 @@
         .sell-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 30px;
             margin-bottom: 20px;
         }
 
@@ -271,7 +271,7 @@
 
         .btn-submit {
             width: 100%;
-            max-width: 280px;
+            max-width: 320px;
             padding: 14px 0;
             background: linear-gradient(135deg, #8B5A3C 0%, #6B4423 100%);
             color: white;
@@ -303,7 +303,7 @@
 
         .btn-draft {
             width: 100%;
-            max-width: 280px;
+            max-width: 320px;
             padding: 12px 0;
             background: transparent;
             color: #555;
@@ -321,6 +321,151 @@
             border-color: #8B5A3C;
             color: #8B5A3C;
             background: #fdf5f0;
+        }
+
+        /* ===== LOGOUT MODAL STYLES ===== */
+        .logout-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .logout-modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .logout-modal-card {
+            background: #8B5A3C;
+            border-radius: 20px;
+            padding: 22px;
+            width: 90%;
+            max-width: 550px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logout-modal-inner {
+            background: #D9D9D9;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .logout-modal-header {
+            background: linear-gradient(180deg, #A8D5E2 0%, #95C9D9 100%);
+            padding: 20px 30px;
+        }
+
+        .logout-modal-header h1 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #000000;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .logout-modal-body {
+            padding: 50px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-confirmation-box {
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 40px 50px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .logout-confirmation-box h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .logout-confirmation-box p {
+            font-size: 14px;
+            color: #333333;
+            margin-bottom: 35px;
+            line-height: 1.5;
+        }
+
+        .logout-modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn-logout-confirm,
+        .btn-logout-cancel {
+            width: 100%;
+            padding: 12px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout-confirm {
+            background: #FF6B6B;
+            color: white;
+        }
+
+        .btn-logout-confirm:hover {
+            background: #FF5252;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-logout-cancel {
+            background: #FF8585;
+            color: white;
+        }
+
+        .btn-logout-cancel:hover {
+            background: #FF7070;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 133, 133, 0.4);
+        }
+
+        .btn-logout-confirm:active,
+        .btn-logout-cancel:active {
+            transform: translateY(0);
         }
 
         /* ===== Responsive ===== */
@@ -347,6 +492,10 @@
             .sell-row {
                 grid-template-columns: 1fr 1fr;
             }
+
+            .logout-confirmation-box {
+                padding: 30px 35px;
+            }
         }
 
         @media (max-width: 420px) {
@@ -355,6 +504,14 @@
             }
             .sell-label.right {
                 text-align: left;
+            }
+
+            .logout-modal-card {
+                padding: 15px;
+            }
+
+            .logout-confirmation-box {
+                padding: 25px 20px;
             }
         }
     </style>
@@ -420,7 +577,7 @@
                 </a>
             </li>
             <li class="sidebar-menu-item" style="margin-top: 20px;">
-                <a href="Login & Registration.html" class="sidebar-menu-link" onclick="logout(event)" style="background: rgba(255, 255, 255, 0.1);">
+                <a href="#" class="sidebar-menu-link" onclick="showLogoutModal(event)" style="background: rgba(255, 255, 255, 0.1);">
                     <span>Logout</span>
                 </a>
             </li>
@@ -496,6 +653,28 @@
         </div>
     </div>
 
+    <!-- LOGOUT MODAL -->
+    <div class="logout-modal-overlay" id="logoutModal">
+        <div class="logout-modal-card">
+            <div class="logout-modal-inner">
+                <div class="logout-modal-header">
+                    <h1>LOGOUT</h1>
+                </div>
+                <div class="logout-modal-body">
+                    <div class="logout-confirmation-box">
+                        <h2>LOGOUT CONFIRMATION</h2>
+                        <p>Do you really want to LOGOUT<br>from your account?</p>
+                        
+                        <div class="logout-modal-buttons">
+                            <button class="btn-logout-confirm" onclick="confirmLogout()">LOGOUT</button>
+                            <button class="btn-logout-cancel" onclick="closeLogoutModal()">CANCEL</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ===== Sidebar toggle (mobile) =====
         function toggleSidebar() {
@@ -533,20 +712,37 @@
             alert('Draft saved!');
         }
 
-        // ===== Logout =====
-        function logout(e) {
+        // ===== LOGOUT MODAL FUNCTIONS =====
+        function showLogoutModal(e) {
             e.preventDefault();
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('userLoggedIn');
-                localStorage.removeItem('userEmail');
-                window.location.href = 'Login & Registration.html';
-            }
+            document.getElementById('logoutModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
+
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function confirmLogout() {
+            localStorage.removeItem('userLoggedIn');
+            localStorage.removeItem('userEmail');
+            window.location.href = 'Login & Registration.html';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('logoutModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLogoutModal();
+            }
+        });
 
         // ===== Highlight active sidebar link =====
         document.querySelectorAll('.sidebar-menu-link').forEach(link => {
             link.addEventListener('click', function() {
-                if (window.innerWidth <= 768) toggleSidebar();
+                if (window.innerWidth <= 768 && !this.onclick) {
+                    toggleSidebar();
+                }
             });
         });
     </script>
