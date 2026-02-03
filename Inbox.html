@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ─── Sidebar ─── */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 220px;
+            height: 100vh;
+            background: linear-gradient(180deg, #8B5A3C 0%, #6B4423 100%);
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            background: transparent;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header-text {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu-item {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: #F5E6D3;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .sidebar-menu-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .sidebar-menu-link.active {
+            background: rgba(245, 230, 211, 0.2);
+        }
+
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: linear-gradient(135deg, #8B5A3C 0%, #6B4423 100%);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .sidebar-overlay.active { display: block; }
+
+        /* ─── Main ─── */
+        .main-content {
+            margin-left: 220px;
+            padding: 40px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ─── Brown Frame ─── */
+        .inbox-wrapper {
+            width: 100%;
+            max-width: 860px;
+            height: 530px;
+            background: #7a4e2d;
+            border-radius: 14px;
+            padding: 14px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* ─── People Panel ─── */
+        .people-panel {
+            width: 175px;
+            min-width: 175px;
+            background: #fff;
+            border-radius: 8px 0 0 8px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-right: 1px solid #e8e8e8;
+        }
+
+        .people-header {
+            padding: 14px 14px 10px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a1a1a;
+            border-bottom: 1px solid #eee;
+        }
+
+        .people-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 4px 0;
+        }
+
+        .people-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f2f2f2;
+        }
+
+        .people-item:last-child { border-bottom: none; }
+
+        .people-item:hover,
+        .people-item.selected {
+            background: #eef6fa;
+        }
+
+        .people-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ddd;
+            border: 2px solid #bbb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .people-avatar svg {
+            width: 16px;
+            height: 16px;
+            stroke: #888;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .people-name {
+            font-size: 13px;
+            color: #444;
+        }
+
+        /* ─── Chat Section ─── */
+        .chat-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #000;
+            border-radius: 0 8px 8px 0;
+            overflow: hidden;
+        }
+
+        /* Top Bar */
+        .chat-topbar {
+            background: #c8e6f0;
+            height: 42px;
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 10px;
+        }
+
+        .chat-topbar-avatar {
+            width: 28px;
+            height: 28px;
+            background: #9ab;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-topbar-avatar svg {
+            width: 15px;
+            height: 15px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .chat-topbar-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2a2a2a;
+        }
+
+        /* Messages */
+        .messages-area {
+            flex: 1;
+            padding: 20px 18px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            scroll-behavior: smooth;
+        }
+
+        /* ── Bubble base ── */
+        .bubble {
+            max-width: 68%;
+            padding: 14px 18px;
+            border-radius: 16px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #222;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(255,255,255,0.12);
+            word-wrap: break-word;
+            animation: popIn 0.22s ease;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.92); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        /* Received (left) */
+        .bubble.received {
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        /* Sent (right) */
+        .bubble.sent {
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* Typing indicator */
+        .typing-indicator {
+            align-self: flex-start;
+            background: #fff;
+            border-radius: 16px 16px 16px 4px;
+            padding: 14px 20px;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(255,255,255,0.12);
+            animation: popIn 0.22s ease;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: #aaa;
+            border-radius: 50%;
+            animation: bounce 1.1s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.18s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.36s; }
+
+        @keyframes bounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30%           { transform: translateY(-5px); }
+        }
+
+        /* ── Input Row (black bg row at the bottom) ── */
+        .chat-input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px 12px;
+            background: #000;
+        }
+
+        /* Attachment circle — sits on black bg */
+        .attach-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e8e8e8;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+
+        .attach-btn:hover { background: #d8d8d8; }
+
+        .attach-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: #555;
+            fill: none;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* White pill — input + mic only */
+        .chat-input-bar {
+            flex: 1;
+            background: #fff;
+            border-radius: 28px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            gap: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.14);
+        }
+
+        .chat-input-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            color: #333;
+            background: transparent;
+        }
+
+        .chat-input-bar input::placeholder { color: #aaa; }
+
+        /* Mic / Send icon inside pill */
+        .icon-btn {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: #888;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.2s;
+        }
+
+        .icon-btn:hover svg { stroke: #8B5A3C; }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 220px;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            .sidebar.active { transform: translateX(0); }
+            .main-content {
+                margin-left: 0;
+                padding: 60px 12px 20px;
+            }
+            .sidebar-toggle { display: block; }
+            .inbox-wrapper { height: auto; min-height: 480px; }
+            .people-panel { width: 110px; min-width: 110px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Mobile toggle -->
+<button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header" onclick="window.location.href='MyAccount.html'">
+        <div class="sidebar-header-text">My Account</div>
+    </div>
+    <ul class="sidebar-menu">
+        <li class="sidebar-menu-item"><a href="Homepage.html" class="sidebar-menu-link"><span>Home</span></a></li>
+        <li class="sidebar-menu-item"><a href="Inbox.html" class="sidebar-menu-link active"><span>Inbox</span></a></li>
+        <li class="sidebar-menu-item"><a href="SavedItems.html" class="sidebar-menu-link"><span>Saved Items</span></a></li>
+        <li class="sidebar-menu-item"><a href="#recent" class="sidebar-menu-link"><span>Recently Viewed</span></a></li>
+        <li class="sidebar-menu-item"><a href="#delivery" class="sidebar-menu-link"><span>Delivery Address</span></a></li>
+        <li class="sidebar-menu-item"><a href="Cart.html" class="sidebar-menu-link"><span>Cart</span></a></li>
+        <li class="sidebar-menu-item"><a href="Sell.html" class="sidebar-menu-link"><span>Sell</span></a></li>
+        <li class="sidebar-menu-item"><a href="#contacts" class="sidebar-menu-link"><span>Contacts</span></a></li>
+        <li class="sidebar-menu-item"><a href="Settings.html" class="sidebar-menu-link"><span>Settings</span></a></li>
+        <li class="sidebar-menu-item" style="margin-top:20px;">
+            <a href="#" class="sidebar-menu-link" onclick="logout(event)" style="background:rgba(255,255,255,0.1);"><span>Logout</span></a>
+        </li>
+    </ul>
+</aside>
+
+<!-- Main -->
+<div class="main-content">
+    <div class="inbox-wrapper">
+
+        <!-- People -->
+        <div class="people-panel">
+            <div class="people-header">Messages</div>
+            <div class="people-list" id="peopleList"></div>
+        </div>
+
+        <!-- Chat -->
+        <div class="chat-section">
+            <div class="chat-topbar">
+                <div class="chat-topbar-avatar">
+                    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <span class="chat-topbar-name" id="chatName">John Miller</span>
+            </div>
+
+            <div class="messages-area" id="messagesArea">
+                <!-- seed messages -->
+                <div class="bubble received">Hi! Is this still available?</div>
+                <div class="bubble sent">Yes! Still available. Which item are you interested in?</div>
+            </div>
+
+            <!-- Input Row -->
+            <div class="chat-input-row">
+                <!-- Attachment circle (outside pill, on black) -->
+                <button class="attach-btn" onclick="document.getElementById('fileInput').click()" title="Attach">
+                    <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a4.5 4.5 0 01-6.36-6.36l9.19-9.19a3 3 0 014.24 4.24l-9.2 9.19a1.5 1.5 0 01-2.12-2.12l8.49-8.48"/></svg>
+                </button>
+                <input type="file" id="fileInput" style="display:none">
+
+                <!-- White pill: input + mic/send -->
+                <div class="chat-input-bar">
+                    <input type="text" id="msgInput" placeholder="Type a message..." autocomplete="off">
+                    <button class="icon-btn" id="sendBtn" title="Send">
+                        <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v1a7 7 0 01-14 0v-1"/><line x1="12" y1="18" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ── People list data - Real buyer names ──
+const people = [
+    "John Miller",
+    "Sarah Chen",
+    "Mike Johnson",
+    "Emma Davis",
+    "Alex Torres",
+    "Lisa Park",
+    "David Kim",
+    "Rachel Green",
+    "Tom Wilson",
+    "Maya Patel"
+];
+
+// Realistic buyer conversation replies per person
+const conversationReplies = {
+    0: [ // John Miller - interested in shoes
+        "Hi! Is this still available?",
+        "Great! Can I see more photos?",
+        "What's the condition? Any wear or damage?",
+        "Would you consider trading for a watch?",
+        "Sounds good! When can we meet?",
+        "Perfect! I'll bring the watch tomorrow.",
+        "Thanks! See you then."
+    ],
+    1: [ // Sarah Chen - asking about bag
+        "Hello! I'm interested in your leather bag.",
+        "Does it have any scratches or marks?",
+        "I have a designer scarf to trade. Interested?",
+        "It's brand new, still has tags!",
+        "Can we meet this weekend?",
+        "Great! I'll message you tomorrow."
+    ],
+    2: [ // Mike Johnson - negotiating
+        "Hey, still got that jacket?",
+        "Nice! What are you looking to trade for?",
+        "I have a gaming headset, almost new.",
+        "Sure, I can add a pair of gloves too.",
+        "Deal! When works for you?",
+        "See you Saturday!"
+    ],
+    3: [ // Emma Davis - detail-oriented
+        "Hi there! I saw your listing.",
+        "Can you tell me more about the size?",
+        "What color exactly? Hard to tell from the photo.",
+        "I have some sneakers in excellent condition.",
+        "They're size 9, is that what you need?",
+        "Awesome! Let's set up a time."
+    ],
+    4: [ // Alex Torres - casual
+        "Yo! Is this up for trade?",
+        "Cool cool. What do you want for it?",
+        "I got a skateboard deck, brand new.",
+        "Yeah man, never used it.",
+        "Alright, I'm down. Where you at?",
+        "Bet, I'll hit you up."
+    ],
+    5: [ // Lisa Park - polite and thorough
+        "Good evening! I hope you're well.",
+        "I'm very interested in this item.",
+        "Would you accept a tablet in trade?",
+        "It's an iPad, 64GB, works perfectly.",
+        "Wonderful! I can meet anytime this week.",
+        "Thank you so much! Looking forward to it."
+    ],
+    6: [ // David Kim - quick responder
+        "Available?",
+        "Price?",
+        "Trade for laptop charger?",
+        "Original, works great.",
+        "Today?",
+        "Cool. 3pm?"
+    ],
+    7: [ // Rachel Green - friendly
+        "Hey! Love this! 😊",
+        "Is it true to size?",
+        "I have a really nice backpack!",
+        "It's almost brand new, barely used.",
+        "That would be perfect!",
+        "Can't wait! Thanks!"
+    ],
+    8: [ // Tom Wilson - technical
+        "Hello. I need more specifications.",
+        "What's the material composition?",
+        "Any defects or functional issues?",
+        "I can offer electronics accessories.",
+        "USB cables, power banks, phone cases.",
+        "Understood. I'll prepare everything."
+    ],
+    9: [ // Maya Patel - bargain hunter
+        "Hi! Is this negotiable?",
+        "What if I throw in two items?",
+        "A book and a small speaker?",
+        "Both in great condition, promise!",
+        "Yay! Thank you so much!",
+        "You're the best! See you soon."
+    ]
+};
+
+let replyIndex = 0;
+let selectedPerson = 0;
+
+// ── Build People Panel ──
+const peopleList = document.getElementById('peopleList');
+people.forEach((name, i) => {
+    const el = document.createElement('div');
+    el.className = 'people-item' + (i === 0 ? ' selected' : '');
+    el.innerHTML = `
+        <div class="people-avatar">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="people-name">${name}</div>`;
+    el.addEventListener('click', () => selectPerson(i));
+    peopleList.appendChild(el);
+});
+
+function selectPerson(i) {
+    document.querySelectorAll('.people-item').forEach(el => el.classList.remove('selected'));
+    peopleList.children[i].classList.add('selected');
+    selectedPerson = i;
+
+    // Update chat name
+    document.getElementById('chatName').textContent = people[i];
+
+    // Reset chat with first message from buyer
+    const area = document.getElementById('messagesArea');
+    area.innerHTML = '';
+    addBubble('received', conversationReplies[i][0]);
+    replyIndex = 1; // Start from next reply
+}
+
+// ── Add a bubble ──
+function addBubble(type, text) {
+    const area = document.getElementById('messagesArea');
+    const div = document.createElement('div');
+    div.className = 'bubble ' + type;
+    div.textContent = text;
+    area.appendChild(div);
+    area.scrollTop = area.scrollHeight;
+}
+
+// ── Show typing ──
+function showTyping() {
+    const area = document.getElementById('messagesArea');
+    const typing = document.createElement('div');
+    typing.className = 'typing-indicator';
+    typing.id = 'typingIndicator';
+    typing.innerHTML = '<span></span><span></span><span></span>';
+    area.appendChild(typing);
+    area.scrollTop = area.scrollHeight;
+}
+
+function removeTyping() {
+    const t = document.getElementById('typingIndicator');
+    if (t) t.remove();
+}
+
+// ── Send message ──
+function sendMessage() {
+    const input = document.getElementById('msgInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    addBubble('sent', text);
+    input.value = '';
+
+    // Get conversation for selected person
+    const personReplies = conversationReplies[selectedPerson];
+    
+    // If there are more replies in the conversation
+    if (replyIndex < personReplies.length) {
+        showTyping();
+        setTimeout(() => {
+            removeTyping();
+            addBubble('received', personReplies[replyIndex]);
+            replyIndex++;
+        }, 1200 + Math.random() * 800);
+    } else {
+        // Conversation ended, cycle back or send generic reply
+        showTyping();
+        setTimeout(() => {
+            removeTyping();
+            const genericReplies = [
+                "Thanks for getting back to me!",
+                "Sounds good!",
+                "Perfect, thanks!",
+                "Got it!",
+                "Appreciate it!"
+            ];
+            const randomReply = genericReplies[Math.floor(Math.random() * genericReplies.length)];
+            addBubble('received', randomReply);
+        }, 1000 + Math.random() * 600);
+    }
+}
+
+// ── Events ──
+document.getElementById('msgInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); sendMessage(); }
+});
+
+document.getElementById('sendBtn').addEventListener('click', sendMessage);
+
+// Switch icon to send arrow when input has text
+const msgInput = document.getElementById('msgInput');
+const sendBtn  = document.getElementById('sendBtn');
+
+const micSVG  = `<svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v1a7 7 0 01-14 0v-1"/><line x1="12" y1="18" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>`;
+const sendSVG = `<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`;
+
+msgInput.addEventListener('input', () => {
+    sendBtn.innerHTML = msgInput.value.trim() ? sendSVG : micSVG;
+});
+
+// ── Sidebar helpers ──
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('active');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+
+function logout(e) {
+    e.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('userLoggedIn');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'Login & Registration.html';
+    }
+}
+
+document.querySelectorAll('.sidebar-menu-link').forEach(link => {
+    link.addEventListener('click', () => { if (window.innerWidth <= 768) toggleSidebar(); });
+});
+</script>
+
+</body>
+</html>

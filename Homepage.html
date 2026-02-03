@@ -408,26 +408,6 @@
             color: #666;
         }
 
-        .buy-btn {
-    margin-top: 8px;
-    width: 100%;
-    padding: 8px 0;
-    background: #B0D4E3;
-    border: none;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: bold;
-    color: #2D1810;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.buy-btn:hover {
-    background: #9EC7D8;
-    transform: translateY(-1px);
-}
-
-
         .wishlist-btn {
             position: absolute;
             top: 10px;
@@ -630,16 +610,15 @@
 
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header" onclick="window.location.href='my-account.html'">
-    <span class="menu-icon">
-        <svg viewBox="0 0 24 24">
-            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-        </svg>
-    </span>
-    <span class="sidebar-header-text">My Account</span>
-</div>
-
+        <div class="sidebar-header" onclick="window.location.href='MyAccount.html'">
+            <div class="user-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+            </div>
+            <div class="sidebar-header-text">My Account</div>
+        </div>
 
         <ul class="sidebar-menu">
             <li class="sidebar-menu-item">
@@ -653,7 +632,7 @@
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#saved" class="sidebar-menu-link">
+                <a href="SavedItems.html" class="sidebar-menu-link">
                     <span class="menu-icon">
                         <svg viewBox="0 0 24 24">
                             <path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/>
@@ -685,7 +664,7 @@
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#cart" class="sidebar-menu-link">
+                <a href="Cart.html" class="sidebar-menu-link">
                     <span class="menu-icon">
                         <svg viewBox="0 0 24 24">
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
@@ -695,7 +674,7 @@
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#sell" class="sidebar-menu-link">
+                <a href="Sell.html" class="sidebar-menu-link">
                     <span class="menu-icon">
                         <svg viewBox="0 0 24 24">
                             <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
@@ -720,7 +699,7 @@
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#settings" class="sidebar-menu-link">
+                <a href="Settings.html" class="sidebar-menu-link">
                     <span class="menu-icon">
                         <svg viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="3"/>
@@ -791,7 +770,6 @@
                     <div class="item-info">
                         <div class="item-title">Laptop</div>
                         <div class="item-price">₱ 25,000</div>
-                        <button class="buy-btn" onclick="buyItem(event, 1)">TRADE NOW</button>
                     </div>
                 </div>
 
@@ -801,7 +779,6 @@
                     <div class="item-info">
                         <div class="item-title">Winter Jacket</div>
                         <div class="item-price">₱ 2,500</div>
-                        <button class="buy-btn" onclick="buyItem(event, 1)">TRADE NOW</button>
                     </div>
                 </div>
 
@@ -811,7 +788,6 @@
                     <div class="item-info">
                         <div class="item-title">Elegant Dress</div>
                         <div class="item-price">₱ 1,800</div>
-                        <button class="buy-btn" onclick="buyItem(event, 1)">TRADE NOW</button>
                     </div>
                 </div>
 
@@ -821,7 +797,6 @@
                     <div class="item-info">
                         <div class="item-title">Black Heels</div>
                         <div class="item-price">₱ 3,200</div>
-                        <button class="buy-btn" onclick="buyItem(event, 1)">TRADE NOW</button>
                     </div>
                 </div>
 
@@ -831,7 +806,6 @@
                     <div class="item-info">
                         <div class="item-title">Cozy Sweater</div>
                         <div class="item-price">₱ 1,500</div>
-                        <button class="buy-btn" onclick="buyItem(event, 1)">TRADE NOW</button>
                     </div>
                 </div>
 
@@ -842,7 +816,6 @@
                     <div class="item-info">
                         <div class="item-title">Designer Bag</div>
                         <div class="item-price">₱ 5,500</div>
-                        <button class="buy-btn" onclick="buyItem(event, 1)">TRADE NOW</button>
                     </div>
                 </div>
 
@@ -852,7 +825,6 @@
                     <div class="item-info">
                         <div class="item-title">Classic Watch</div>
                         <div class="item-price">₱ 8,900</div>
-                        <button class="buy-btn" onclick="buyItem(event, 1)">TRADE NOW</button>
                     </div>
                 </div>
 
@@ -862,7 +834,6 @@
                     <div class="item-info">
                         <div class="item-title">Sunglasses</div>
                         <div class="item-price">₱ 2,200</div>
-                        <button class="buy-btn" onclick="buyItem(event, 1)">TRADE NOW</button>
                     </div>
                 </div>
 
@@ -872,7 +843,6 @@
                     <div class="item-info">
                         <div class="item-title">White Sneakers</div>
                         <div class="item-price">₱ 4,800</div>
-                        <button class="buy-btn" onclick="buyItem(event, 1)">TRADE NOW</button>
                     </div>
                 </div>
 
@@ -882,7 +852,6 @@
                     <div class="item-info">
                         <div class="item-title">Denim Jeans</div>
                         <div class="item-price">₱ 1,900</div>
-                        <button class="buy-btn" onclick="buyItem(event, 1)">TRADE NOW</button>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Items</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ===== Sidebar Styles (unchanged) ===== */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 220px;
+            height: 100vh;
+            background: linear-gradient(180deg, #8B5A3C 0%, #6B4423 100%);
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            background: transparent;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header-text {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu-item {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: #F5E6D3;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .sidebar-menu-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .sidebar-menu-link.active {
+            background: rgba(245, 230, 211, 0.2);
+        }
+
+        /* ===== Mobile Toggle ===== */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: linear-gradient(135deg, #8B5A3C 0%, #6B4423 100%);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* ===== Main Content ===== */
+        .main-content {
+            margin-left: 220px;
+            padding: 40px;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        /* ===== Outer brown frame ===== */
+        .saved-card {
+            background: #8B5A3C;
+            border-radius: 20px;
+            padding: 22px;
+            width: 100%;
+            max-width: 1100px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+
+        /* ===== Inner white wrapper ===== */
+        .saved-inner {
+            background: #ffffff;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        /* ===== Light blue header ===== */
+        .saved-header {
+            background: linear-gradient(180deg, #d6eaf0 0%, #c8e3ec 100%);
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .saved-header-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: #5a8fa3;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .saved-header h2 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        /* ===== Items grid area (light blue bg) ===== */
+        .saved-body {
+            background: #dceef5;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+        }
+
+        /* ===== Individual product card ===== */
+        .product-card {
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.13);
+        }
+
+        /* ===== Image container with heart overlay ===== */
+        .product-image-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            background: #eee;
+        }
+
+        .product-image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Heart button top-right */
+        .heart-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 28px;
+            height: 28px;
+            background: rgba(255,255,255,0.88);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.25s ease, transform 0.2s ease;
+            z-index: 2;
+        }
+
+        .heart-btn:hover {
+            background: rgba(255,255,255,1);
+            transform: scale(1.1);
+        }
+
+        .heart-btn svg {
+            width: 15px;
+            height: 15px;
+            stroke: #666;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: fill 0.25s ease, stroke 0.25s ease;
+        }
+
+        .heart-btn.active svg {
+            fill: #e74c4c;
+            stroke: #e74c4c;
+        }
+
+        /* ===== Card body: user icon row + title + stock + button ===== */
+        .product-info {
+            padding: 10px 10px 12px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        /* Small user/avatar circle */
+        .product-user {
+            width: 24px;
+            height: 24px;
+            background: #c8d8e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+        }
+
+        .product-user svg {
+            width: 13px;
+            height: 13px;
+            stroke: #5a7a8a;
+            fill: none;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .product-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 2px;
+        }
+
+        .product-stock {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        /* BUY NOW button - pushed to bottom */
+        .btn-buy {
+            margin-top: auto;
+            width: 100%;
+            padding: 7px 0;
+            background: linear-gradient(135deg, #8B5A3C 0%, #6B4423 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-buy:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(107,68,35,0.3);
+        }
+
+        .btn-buy:active {
+            transform: translateY(0);
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 1100px) {
+            .saved-body {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .saved-body {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 220px;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 60px 18px 30px;
+            }
+
+            .sidebar-toggle {
+                display: block;
+            }
+
+            .saved-body {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 420px) {
+            .saved-body {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Toggle (mobile) -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+    <!-- Sidebar Overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar (kept exactly as original) -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header" onclick="window.location.href='MyAccount.html'">
+            <div class="sidebar-header-text">My Account</div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+                <a href="Homepage.html" class="sidebar-menu-link">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="inbox.html" class="sidebar-menu-link">
+                    <span>Inbox</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="SavedItems.html" class="sidebar-menu-link active">
+                    <span>Saved Items</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#recent" class="sidebar-menu-link">
+                    <span>Recently Viewed</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#delivery" class="sidebar-menu-link">
+                    <span>Delivery Address</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="Cart.html" class="sidebar-menu-link">
+                    <span>Cart</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="Sell.html" class="sidebar-menu-link">
+                    <span>Sell</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#contacts" class="sidebar-menu-link">
+                    <span>Contacts</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="Settings.html" class="sidebar-menu-link">
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li class="sidebar-menu-item" style="margin-top: 20px;">
+                <a href="#" class="sidebar-menu-link" onclick="logout(event)" style="background: rgba(255, 255, 255, 0.1);">
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="saved-card">
+            <div class="saved-inner">
+
+                <!-- Blue header -->
+                <div class="saved-header">
+                    <div class="saved-header-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+                        </svg>
+                    </div>
+                    <h2>Saved Items</h2>
+                </div>
+
+                <!-- Product grid on light blue bg -->
+                <div class="saved-body" id="productGrid">
+                    <!-- Cards injected by JS -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== Product data with real items =====
+        const products = [
+            { id: 1, title: "Running Shoes", stock: 7,  img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop" },
+            { id: 2, title: "Leather Bag", stock: 3,  img: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=300&h=300&fit=crop" },
+            { id: 3, title: "Casual Shirt", stock: 10, img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=300&h=300&fit=crop" },
+            { id: 4, title: "Denim Jeans", stock: 5,  img: "https://images.unsplash.com/photo-1542272454315-7f6e8b7f7c8f?w=300&h=300&fit=crop" },
+            { id: 5, title: "Backpack", stock: 8,  img: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&h=300&fit=crop" },
+            { id: 6, title: "Wrist Watch", stock: 4,  img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop" },
+            { id: 7, title: "Sunglasses", stock: 12,  img: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=300&h=300&fit=crop" },
+            { id: 8, title: "Winter Jacket", stock: 6,  img: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300&h=300&fit=crop" },
+            { id: 9, title: "Sneakers", stock: 9,  img: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=300&h=300&fit=crop" },
+            { id: 10, title: "Baseball Cap", stock: 15,  img: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=300&h=300&fit=crop" },
+        ];
+
+        // ===== Render cards =====
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = products.map(p => `
+                <div class="product-card">
+                    <div class="product-image-wrap">
+                        <!-- Placeholder colored bg; real images load if network allows -->
+                        <img src="${p.img}" alt="${p.title}"
+                             onerror="this.style.display='none'; this.parentElement.style.background='#c9bfb0';">
+                        <button class="heart-btn active" onclick="toggleHeart(this)">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-user">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                        <div class="product-title">${p.title}</div>
+                        <div class="product-stock">in stock: ${p.stock}</div>
+                        <button class="btn-buy" onclick="buyNow(${p.id})">BUY NOW</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ===== Toggle heart (saved / unsaved) =====
+       function toggleHeart(btn) {
+        // Ask confirmation first
+        const confirmRemove = confirm("Remove this item from Saved Items?");
+
+        // If user cancels, do nothing
+        if (!confirmRemove) {
+            return;
+        }
+
+        // User confirmed → unheart
+        btn.classList.remove('active');
+
+        const productCard = btn.closest('.product-card');
+
+        // Smooth remove animation
+        productCard.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+        productCard.style.opacity = '0';
+        productCard.style.transform = 'scale(0.95)';
+
+        setTimeout(() => {
+            productCard.remove();
+        }, 250);
+    }
+        // ===== Buy Now =====
+        function buyNow(id) {
+            alert('Proceeding to buy item #' + id);
+        }
+
+        // ===== Sidebar toggle (mobile) =====
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
+        // ===== Logout =====
+        function logout(e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('userEmail');
+                window.location.href = 'Login & Registration.html';
+            }
+        }
+
+        // ===== Close sidebar on mobile link click =====
+        document.querySelectorAll('.sidebar-menu-link').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 768) toggleSidebar();
+            });
+        });
+
+        // ===== Init =====
+        renderProducts();
+    </script>
+</body>
+</html>
