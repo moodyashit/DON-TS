@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lorem Ipsum - Login & Register</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #1a1a1a;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(to right, #8B5A3C 50%, #c0e4f5 50%);
+            overflow: hidden;
+        }
+
+        /* Left Panel */
+        .left-panel {
+            flex: 1;
+            background-color: #8B5A3C;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 100px 60px 60px;
+            color: white;
+            position: relative;
+        }
+
+        .logo {
+            width: 150px;
+            height: 150px;
+            background-color: #F5E6C8;
+            border-radius: 25px;
+            position: relative;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 20px;
+        }
+
+        .left-panel h1 {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .left-panel p {
+            font-size: 15px;
+            line-height: 1.6;
+            text-align: center;
+            max-width: 450px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Right Panel */
+        .right-panel {
+            flex: 1;
+            background-color: #c0e4f5;
+            display: flex;
+            flex-direction: column;
+            padding: 100px 60px 60px;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: #c0e4f5;
+            z-index: 1000;
+            height: 60px;
+            border-radius: 50px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-logo {
+            width: 50px;
+            height: 50px;
+            background-color: #2C1810;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .header-logo svg {
+            width: 30px;
+            height: 30px;
+        }
+
+        .header-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 8px;
+        }
+
+        .register-btn {
+            background-color: #2C1810;
+            color: white;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 30px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .register-btn:hover {
+            background-color: #1a0f08;
+            transform: translateY(-2px);
+        }
+
+        /* Form Container */
+        .form-container {
+            margin-top: 50px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+
+        .form-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #FF5722;
+            margin-bottom: 35px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 15px;
+            color: #7A8B9C;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #95A5B0;
+            border-radius: 30px;
+            font-size: 14px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #FF5722;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #7A8B9C;
+        }
+
+        .password-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: 8px;
+            margin-bottom: 25px;
+        }
+
+        .forgot-password a {
+            color: #5A6B7C;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: #FF5722;
+        }
+
+        .submit-btn {
+            width: 100%;
+            max-width: 250px;
+            padding: 15px;
+            background-color: #FF5722;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .submit-btn:hover {
+            background-color: #E64A19;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.3);
+        }
+
+        .submit-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        /* Social Login */
+        .social-divider {
+            text-align: center;
+            margin: 30px 0 20px;
+            color: #C8D4DB;
+            font-size: 13px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .social-divider::before,
+        .social-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 35%;
+            height: 2px;
+            background-color: #C8D4DB;
+        }
+
+        .social-divider::before {
+            left: 0;
+        }
+
+        .social-divider::after {
+            right: 0;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn.facebook {
+            background-color: #3b5998;
+        }
+
+        .social-btn.google {
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Toggle between login and signup */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .logo {
+                width: 140px;
+                height: 140px;
+            }
+
+            .left-panel h1 {
+                font-size: 40px;
+            }
+
+            .left-panel p {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .header {
+                top: 15px;
+                left: 15px;
+                right: 15px;
+                padding: 12px 20px;
+                height: 55px;
+            }
+
+            .header-logo {
+                width: 40px;
+                height: 40px;
+            }
+
+            .register-btn {
+                padding: 10px 25px;
+                font-size: 15px;
+            }
+
+            .left-panel, .right-panel {
+                flex: none;
+                width: 100%;
+            }
+
+            .left-panel {
+                padding: 90px 20px 40px;
+                min-height: 40vh;
+            }
+
+            .right-panel {
+                padding: 90px 20px 40px;
+                min-height: 60vh;
+            }
+
+            .logo {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 20px;
+            }
+
+            .left-panel h1 {
+                font-size: 32px;
+                margin-bottom: 15px;
+            }
+
+            .left-panel p {
+                font-size: 14px;
+                max-width: 350px;
+            }
+
+            .form-container {
+                margin-top: 40px;
+            }
+
+            .form-title {
+                font-size: 32px;
+                margin-bottom: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                padding: 10px 15px;
+                height: 50px;
+            }
+
+            .header-logo {
+                width: 35px;
+                height: 35px;
+            }
+
+            .register-btn {
+                padding: 8px 20px;
+                font-size: 14px;
+            }
+
+            .left-panel {
+                padding: 80px 15px 30px;
+                min-height: 35vh;
+            }
+
+            .right-panel {
+                padding: 80px 15px 30px;
+            }
+
+            .logo {
+                width: 80px;
+                height: 80px;
+            }
+
+            .left-panel h1 {
+                font-size: 28px;
+            }
+
+            .left-panel p {
+                font-size: 13px;
+            }
+
+            .form-container {
+                margin-top: 30px;
+                padding: 0 10px;
+            }
+
+            .form-title {
+                font-size: 28px;
+            }
+
+            .form-group label {
+                font-size: 16px;
+            }
+
+            .form-group input {
+                padding: 15px 20px;
+                font-size: 15px;
+            }
+
+            .submit-btn {
+                max-width: 100%;
+                font-size: 18px;
+            }
+
+            .social-buttons {
+                gap: 20px;
+            }
+
+            .social-btn {
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        /* Landscape mobile */
+        @media (max-width: 968px) and (orientation: landscape) {
+            .container {
+                flex-direction: row;
+            }
+
+            .left-panel {
+                min-height: 100vh;
+                padding-top: 100px;
+            }
+
+            .right-panel {
+                min-height: 100vh;
+                overflow-y: auto;
+                padding-top: 100px;
+            }
+
+            .form-container {
+                margin-top: 60px;
+                margin-bottom: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Top Navigation Bar -->
+        <div class="header">
+            <div class="header-logo">
+                <img src="images/logo.png" alt="Logo">
+            </div>
+            <button class="register-btn" onclick="togglePage()">Register</button>
+        </div>
+
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <div class="logo">
+                <img src="images/logo.png" alt="Logo">
+            </div>
+            <h1>lorem ipsum</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis n</p>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+
+            <!-- Login Page -->
+            <div class="form-container page active" id="loginPage">
+                <h2 class="form-title">LOG IN</h2>
+                <form onsubmit="event.preventDefault();">
+                    <div class="form-group">
+                        <label>Email or Username</label>
+                        <input type="text" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="loginPassword" placeholder="">
+                            <span class="password-toggle" onclick="togglePassword('loginPassword')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="forgot-password">
+                        <a href="#">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 12h14M12 5l7 7-7 7" stroke="white" stroke-width="2" fill="none"/>
+                        </svg>
+                        Sign In
+                    </button>
+                </form>
+            </div>
+
+            <!-- Sign Up Page -->
+            <div class="form-container page" id="signupPage">
+                <h2 class="form-title">SIGN UP</h2>
+                <form onsubmit="event.preventDefault();">
+                    <div class="form-group">
+                        <label>Email or Username</label>
+                        <input type="text" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label>Create Password</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="signupPassword" placeholder="">
+                            <span class="password-toggle" onclick="togglePassword('signupPassword')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 12h14M12 5l7 7-7 7" stroke="white" stroke-width="2" fill="none"/>
+                        </svg>
+                        Sign Up
+                    </button>
+                    <div class="social-divider">OR SIGN UP USING</div>
+                    <div class="social-buttons">
+                        <button type="button" class="social-btn facebook">
+                            <svg viewBox="0 0 24 24" fill="white">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </button>
+                        <button type="button" class="social-btn google">
+                            <svg viewBox="0 0 24 24">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePage() {
+            const loginPage = document.getElementById('loginPage');
+            const signupPage = document.getElementById('signupPage');
+            const registerBtn = document.querySelector('.register-btn');
+
+            if (loginPage.classList.contains('active')) {
+                loginPage.classList.remove('active');
+                signupPage.classList.add('active');
+                registerBtn.textContent = 'Login';
+            } else {
+                signupPage.classList.remove('active');
+                loginPage.classList.add('active');
+                registerBtn.textContent = 'Register';
+            }
+        }
+
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+            } else {
+                input.type = 'password';
+            }
+        }
+    </script>
+</body>
+</html>
