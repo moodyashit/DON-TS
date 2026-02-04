@@ -427,7 +427,7 @@
                 </a>
             </li>
             <li class="sidebar-menu-item" style="margin-top: 20px;">
-                <a href="#" class="sidebar-menu-link" onclick="logout(event)" style="background: rgba(255, 255, 255, 0.1);">
+                <a href="Logout.html" class="sidebar-menu-link" style="background: rgba(255, 255, 255, 0.1);">
                     <span>Logout</span>
                 </a>
             </li>
@@ -497,7 +497,7 @@
                         </div>
                         <div class="product-title">${p.title}</div>
                         <div class="product-stock">in stock: ${p.stock}</div>
-                        <button class="btn-buy" onclick="buyNow(${p.id})">BUY NOW</button>
+                        <button class="btn-buy" onclick="buyNow(${p.id})">TRADE NOW</button>
                     </div>
                 </div>
             `).join('');
@@ -529,23 +529,13 @@
     }
         // ===== Buy Now =====
         function buyNow(id) {
-            alert('Proceeding to buy item #' + id);
+            alert('Proceeding to trade item #' + id);
         }
 
         // ===== Sidebar toggle (mobile) =====
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('sidebarOverlay').classList.toggle('active');
-        }
-
-        // ===== Logout =====
-        function logout(e) {
-            e.preventDefault();
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('userLoggedIn');
-                localStorage.removeItem('userEmail');
-                window.location.href = 'Login & Registration.html';
-            }
         }
 
         // ===== Close sidebar on mobile link click =====

@@ -450,7 +450,7 @@
         <li class="sidebar-menu-item"><a href="#contacts" class="sidebar-menu-link"><span>Contacts</span></a></li>
         <li class="sidebar-menu-item"><a href="Settings.html" class="sidebar-menu-link"><span>Settings</span></a></li>
         <li class="sidebar-menu-item" style="margin-top:20px;">
-            <a href="#" class="sidebar-menu-link" onclick="logout(event)" style="background:rgba(255,255,255,0.1);"><span>Logout</span></a>
+            <a href="Logout.html" class="sidebar-menu-link" style="background:rgba(255,255,255,0.1);"><span>Logout</span></a>
         </li>
     </ul>
 </aside>
@@ -718,15 +718,6 @@ msgInput.addEventListener('input', () => {
 function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('active');
     document.getElementById('sidebarOverlay').classList.toggle('active');
-}
-
-function logout(e) {
-    e.preventDefault();
-    if (confirm('Are you sure you want to logout?')) {
-        localStorage.removeItem('userLoggedIn');
-        localStorage.removeItem('userEmail');
-        window.location.href = 'Login & Registration.html';
-    }
 }
 
 document.querySelectorAll('.sidebar-menu-link').forEach(link => {

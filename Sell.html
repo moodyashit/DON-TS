@@ -577,7 +577,7 @@
                 </a>
             </li>
             <li class="sidebar-menu-item" style="margin-top: 20px;">
-                <a href="#" class="sidebar-menu-link" onclick="showLogoutModal(event)" style="background: rgba(255, 255, 255, 0.1);">
+                <a href="Logout.html" class="sidebar-menu-link" style="background: rgba(255, 255, 255, 0.1);">
                     <span>Logout</span>
                 </a>
             </li>
@@ -653,28 +653,6 @@
         </div>
     </div>
 
-    <!-- LOGOUT MODAL -->
-    <div class="logout-modal-overlay" id="logoutModal">
-        <div class="logout-modal-card">
-            <div class="logout-modal-inner">
-                <div class="logout-modal-header">
-                    <h1>LOGOUT</h1>
-                </div>
-                <div class="logout-modal-body">
-                    <div class="logout-confirmation-box">
-                        <h2>LOGOUT CONFIRMATION</h2>
-                        <p>Do you really want to LOGOUT<br>from your account?</p>
-                        
-                        <div class="logout-modal-buttons">
-                            <button class="btn-logout-confirm" onclick="confirmLogout()">LOGOUT</button>
-                            <button class="btn-logout-cancel" onclick="closeLogoutModal()">CANCEL</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
         // ===== Sidebar toggle (mobile) =====
         function toggleSidebar() {
@@ -711,32 +689,6 @@
         function saveDraft() {
             alert('Draft saved!');
         }
-
-        // ===== LOGOUT MODAL FUNCTIONS =====
-        function showLogoutModal(e) {
-            e.preventDefault();
-            document.getElementById('logoutModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeLogoutModal() {
-            document.getElementById('logoutModal').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        function confirmLogout() {
-            localStorage.removeItem('userLoggedIn');
-            localStorage.removeItem('userEmail');
-            window.location.href = 'Login & Registration.html';
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('logoutModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeLogoutModal();
-            }
-        });
-
         // ===== Highlight active sidebar link =====
         document.querySelectorAll('.sidebar-menu-link').forEach(link => {
             link.addEventListener('click', function() {
